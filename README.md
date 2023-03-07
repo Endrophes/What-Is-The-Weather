@@ -2,39 +2,32 @@
 
 Weather app in the Unreal Engine
 
-## Parts
+## Overview
 
-1. Query the Weather
-  a. Python 3.8.9
-  b. Two Command Line Parameters
-    a. Latitude
-    b. Longitude
-  c. Call NWS WebService
-    a. Two query's for data
-2. Create Unreal App
-   a. Unreal 4.25
-   b. "First Person Shooter" Template
-   c. 3D Text Element to a simple Scene
-   d. Target For Windows
-3. Put it together
-   a. Python Call Unreal via Command Line
-   b. Display them p data from Python
-4. Packaging/Submitting
-   1. Zip:
-      1. Python driver script
-      2. Unreal Project Files
-      3. Unreal Executable
-      4. OR video and source files
-5. Extra Credit
-   1. Websocket
-   2. Location Based Off IP
+This project is done in two parts, Server and the App.
+
+Server:
+
+    - Python
+    - Queries for weather data
+    - receives calls from the app
+
+App:
+
+    - Unreal Engine
+    - Front end
+    - Updates the effects based on weather data
+
+## To run
+
+1. Run **weatherPokerServer.py** located in the server folder
+2. Run the Unreal Engine project located in the app folder
 
 ## Install
 
-Software required for assessment
+Software required:
 
 - Unreal engine 4.25.4
-  - Not the latests version, but 4.25 was specifically named
 - Visual Studio 2017
   - Required for Unreal Engine 4.25.4 when running C++
 - Python 3.8.9
@@ -59,10 +52,11 @@ Docs: [https://www.weather.gov/documentation/services-web-api](https://www.weath
 Test link for Weather data
   
 1. Link 1: [https://api.weather.gov/points/39.7456,-97.0892](https://api.weather.gov/points/39.7456,-97.0892)
- a. Returns general data in regards to coordinates inputted
- b. Used for link two
+   - Returns general data in regards to coordinates inputted
+   - Used for link two
+
 2. Link 2: [https://api.weather.gov/gridpoints/TOP/31,80/forecast](https://api.weather.gov/gridpoints/TOP/31,80/forecast)
- a. Returns forecast on given location
+   - Returns forecast on given location
 
 Results:
 
