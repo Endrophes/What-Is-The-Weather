@@ -1,0 +1,12 @@
+{
+  "ip": "XX.XX.XXX.XX",
+  "hostname": "XXX-XXX-XXX-XXX.res.SomeIP.com",
+  "city": "Hell",
+  "region": "Florida",
+  "country": "US",
+  "loc": "55.6849,-29.2075",
+  "org": "Some Internet Provider",       
+  "postal": "99999",
+  "timezone": "America/Detroit",
+  "readme": "https://ipinfo.io/missingauth"      
+}
