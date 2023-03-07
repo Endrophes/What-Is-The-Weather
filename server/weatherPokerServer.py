@@ -22,16 +22,21 @@ InfoLink = 'https://api.weather.gov/points/{},{}' # {latitude},{longitude}
 forecastLink = 'https://api.weather.gov/gridpoints/{}/{},{}/forecast' # {office}/{grid X},{grid Y}
 ipInfoLink = 'http://ipinfo.io/json'
 
+# Query for data
+
+# see ipInfoData.json
 def getLocationFromIp():
     response = requests.get(ipInfoLink)
     resText = response.text
     return json.loads(resText)
 
+# see InfoData.json
 def getInfoData():
     response = requests.get(InfoLink.format(latitude, longitude))
     resText = response.text
     return json.loads(resText)
 
+# see forecastData.json
 def getForecastData(infoData):
     gridId = infoData["properties"]["gridId"]
     gridX  = infoData["properties"]["gridX"]
@@ -41,12 +46,17 @@ def getForecastData(infoData):
     resText = response.text
     return json.loads(resText)
 
+# Search through data
+
 def getLocal(infoData):
     location = infoData["properties"]["relativeLocation"]["properties"]
     return location["city"] + ", " + location["state"]
 
 def getTemp(forecastData):
-    return str(forecastData["properties"]["periods"][0]["temperature"]) + "°F"
+    firstPeriod = forecastData["properties"]["periods"][0]
+    return (
+        str(firstPeriod["temperature"]) + "°" + firstPeriod["temperatureUnit"]
+    )
 
 def getDetail(forecastData):
     return str(forecastData["properties"]["periods"][0]["detailedForecast"]) 
