@@ -1,16 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright 2023 - Bastien A. Auxer - All Rights Reserved
 
 #pragma once
 
-#include "WebSocketsModule.h" // Module definition
-#include "IWebSocket.h" // Socket definition
-#include "Engine/TextRenderActor.h"
-#include "Components/TextRenderComponent.h"
+#include "DataRetrevier.h"
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "LocationDisplay.generated.h"
+#include "Components/TextRenderComponent.h"
+#include "Engine/TextRenderActor.h"
 
+#include "LocationDisplay.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class WHATISTHEWEATHER_API ULocationDisplay : public UActorComponent
@@ -19,9 +18,11 @@ class WHATISTHEWEATHER_API ULocationDisplay : public UActorComponent
 
 public:
 	ULocationDisplay();
-	TSharedPtr<IWebSocket> Socket;
 	UTextRenderComponent* TextRenderComponent;
 	float dTime;
+
+private:
+	DataRetrevier dataRetrevier;
 
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

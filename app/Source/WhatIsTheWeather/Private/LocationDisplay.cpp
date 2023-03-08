@@ -17,7 +17,7 @@ ULocationDisplay::ULocationDisplay()
 //Called whenever this actor is being removed from a level
 void ULocationDisplay::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Socket->Close();
+
 }
 
 // Called when the game starts
@@ -25,9 +25,6 @@ void ULocationDisplay::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	const FString ServerURL = TEXT("ws://localhost:5000/"); // Your server URL. You can use ws, wss or wss+insecure.
-	const FString ServerProtocol = TEXT("ws");              // The WebServer protocol you want to use.
-
 	ATextRenderActor* TextRenderActor = Cast<ATextRenderActor>(GetOwner());
 	if (TextRenderActor)
 	{
@@ -42,27 +39,10 @@ void ULocationDisplay::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Can't get ATextRenderActor"));
 	}
 
-	Socket = FWebSocketsModule::Get().CreateWebSocket(ServerURL, ServerProtocol);
-
-	// We bind all available events
-	Socket->OnConnected().AddLambda([]() -> void {
-		UE_LOG(LogTemp, Warning, TEXT("Connection Established"));
-	});
-
-	Socket->OnConnectionError().AddLambda([](const FString & err) -> void {
-		UE_LOG(LogTemp, Error, TEXT("Connection Failed: %s"), *err);
-	});
-
-	Socket->OnMessage().AddLambda([&](const FString response) -> void {
+	dataRetrevier.addCallback([&](const FString response) -> void {
 		UE_LOG(LogTemp, Warning, TEXT("Response from Server: %s"), *response);
 		TextRenderComponent->SetText(response);
 	});
-
-	Socket->OnMessageSent().AddLambda([](const FString& MessageString) -> void {
-		UE_LOG(LogTemp, Warning, TEXT("Sent message: %s"), *MessageString);
-	});
-
-	Socket->Connect();
 }
 
 
@@ -74,7 +54,7 @@ void ULocationDisplay::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		dTime = 0;
 	}
 	if (dTime == 0) {
-		Socket->Send(TEXT("get-local"));
+		dataRetrevier.query(TEXT("get-local"));
 	}
 	dTime += DeltaTime;
 }

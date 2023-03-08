@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Copyright 2023 - Bastien A. Auxer - All Rights Reserved
 
 #include "DetailsDisplay.h"
 
@@ -9,24 +8,18 @@ UDetailsDisplay::UDetailsDisplay()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	UE_LOG(LogTemp, Warning, TEXT("UDetailsDisplay started running"));
-
-	// ...
 }
 
 //Called whenever this actor is being removed from a level
 void UDetailsDisplay::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Socket->Close();
+
 }
 
 // Called when the game starts
 void UDetailsDisplay::BeginPlay()
 {
 	Super::BeginPlay();
-
-	const FString ServerURL = TEXT("ws://localhost:5000/"); // Your server URL. You can use ws, wss or wss+insecure.
-	const FString ServerProtocol = TEXT("ws");              // The WebServer protocol you want to use.
 
 	ATextRenderActor* TextRenderActor = Cast<ATextRenderActor>(GetOwner());
 	if (TextRenderActor)
@@ -42,18 +35,7 @@ void UDetailsDisplay::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Can't get ATextRenderActor"));
 	}
 
-	Socket = FWebSocketsModule::Get().CreateWebSocket(ServerURL, ServerProtocol);
-
-	// We bind all available events
-	Socket->OnConnected().AddLambda([]() -> void {
-		UE_LOG(LogTemp, Warning, TEXT("Connection Established"));
-	});
-
-	Socket->OnConnectionError().AddLambda([](const FString & err) -> void {
-		UE_LOG(LogTemp, Error, TEXT("Connection Failed: %s"), *err);
-	});
-
-	Socket->OnMessage().AddLambda([&](const FString response) -> void {
+	dataRetrevier.addCallback([&](const FString response) -> void {
 		UE_LOG(LogTemp, Warning, TEXT("Response from Server: %s"), *response);
 		FString display = (TEXT("Sent message: %s"), *response);
 		TArray<FString> splitResponse;
@@ -74,12 +56,6 @@ void UDetailsDisplay::BeginPlay()
 		TextRenderComponent->SetText(rebuiltResponse);
 	});
 
-	Socket->OnMessageSent().AddLambda([](const FString& MessageString) -> void {
-		UE_LOG(LogTemp, Warning, TEXT("Sent message: %s"), *MessageString);
-	});
-
-	Socket->Connect();
-	
 }
 
 
@@ -91,7 +67,7 @@ void UDetailsDisplay::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		dTime = 0;
 	}
 	if (dTime == 0) {
-		Socket->Send(TEXT("get-detail"));
+		dataRetrevier.query(TEXT("get-detail"));
 	}
 	dTime += DeltaTime;
 }

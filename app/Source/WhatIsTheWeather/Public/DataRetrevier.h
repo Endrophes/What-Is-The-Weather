@@ -1,15 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright 2023 - Bastien A. Auxer - All Rights Reserved
 
 #pragma once
 
 #include "WebSocketsModule.h" // Module definition
 #include "IWebSocket.h" // Socket definition
-#include "Engine/TextRenderActor.h"
-#include "Components/TextRenderComponent.h"
-
-#include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
-#include "LocationDisplay.generated.h"
 
 /**
  * Created and maintains a websocket to the source.
@@ -30,4 +24,14 @@ public:
 
 	//After calling to upodate the data, it will path through and find the string value of what to display
 	const FString& getData();
+
+	//
+	void query(const FString& query);
+
+	//
+	template<typename FunctorType, typename... VarTypes>
+	void addCallback(FunctorType&& InFunctor, VarTypes... Vars)
+	{
+		Socket->OnMessage().AddLambda(InFunctor, Vars...);
+	}
 };
