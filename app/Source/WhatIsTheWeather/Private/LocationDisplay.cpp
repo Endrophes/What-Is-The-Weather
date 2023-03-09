@@ -1,10 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "LocationDisplay.h"
-#include "Misc/CommandLine.h"
-#include "Engine/TextRenderActor.h"
-#include "Components/TextRenderComponent.h"
 
 // Sets default values for this component's properties
 ULocationDisplay::ULocationDisplay()

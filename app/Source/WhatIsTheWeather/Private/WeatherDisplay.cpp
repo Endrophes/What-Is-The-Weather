@@ -1,7 +1,6 @@
 // Copyright 2023 - Bastien A. Auxer - All Rights Reserved
 
 #include "WeatherDisplay.h"
-#include "Modules/ModuleManager.h"
 
 // Sets default values for this component's properties
 UWeatherDisplay::UWeatherDisplay()
@@ -38,7 +37,6 @@ void UWeatherDisplay::BeginPlay()
 
 	dataRetrevier.addCallback([&](const FString response) -> void {
 		UE_LOG(LogTemp, Warning, TEXT("Response from Server: %s"), *response);
-		FString display = (TEXT("Sent message: %s"), *response);
 		TextRenderComponent->SetText(response);
 	});
 }
