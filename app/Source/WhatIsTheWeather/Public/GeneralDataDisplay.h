@@ -31,13 +31,16 @@ public:
 	UTextRenderComponent* TextRenderComponent;
 	float dTime;
 
+	//
 	UPROPERTY(EditAnywhere, Meta = (Bitmask, BitmaskEnum = "EDataTargets"))
 	EDataTargets targetProp;
 
+	//
 	UPROPERTY(EditAnywhere, Meta = (Bitmask))
-	bool bAdjustSpan = true;
+	bool bAdjustSpan = false;
 
-	UPROPERTY(EditAnywhere, Meta = (Bitmask))
+	//
+	UPROPERTY(EditAnywhere, Meta = (EditCondition = "bAdjustSpan", EditConditionHides))
 	uint8 segmentMaxLength = 35;
 
 	//

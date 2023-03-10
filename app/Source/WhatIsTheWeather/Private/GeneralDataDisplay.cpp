@@ -30,7 +30,29 @@ void UGeneralDataDisplay::BeginPlay()
 
 	dataRetrevier.addCallback([&](const FString response) -> void {
 		UE_LOG(LogTemp, Warning, TEXT("Response from Server: %s"), *response);
-		TextRenderComponent->SetText(response);
+		if (bAdjustSpan)
+		{
+			TArray<FString> splitResponse;
+			response.ParseIntoArray(splitResponse, TEXT(" "), true);
+			FString rebuiltResponse = "";
+			int sentenceLength = 0;
+			for (int i = 0; i < splitResponse.Num(); i++) {
+				FString word = splitResponse[i];
+				if ((sentenceLength + word.Len()) > segmentMaxLength) {
+					rebuiltResponse.Append("\n " + word);
+					sentenceLength = 0;
+				}
+				else {
+					rebuiltResponse.Append(" " + word);
+					sentenceLength += word.Len();
+				}
+			}
+			TextRenderComponent->SetText(rebuiltResponse);
+		}
+		else
+		{
+			TextRenderComponent->SetText(response);
+		}
 	});
 	
 }
