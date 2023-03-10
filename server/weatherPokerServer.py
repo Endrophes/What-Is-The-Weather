@@ -46,6 +46,43 @@ def getForecastData(infoData):
     resText = response.text
     return json.loads(resText)
 
+### Forecast Processing
+
+def getInt(fullString, startSection, endSection):
+    result = 0
+
+    startIndex = fullString.find(startSection)
+    if startIndex > -1:
+        startIndex += len(startSection)
+        endIndex    = fullString.find(endSection, startIndex)
+        result      = int(fullString[startIndex:endIndex])
+
+    return result
+
+def getPrecipitation(detailedForecast):
+    # print("getPrecipitation")
+    precipitation = getInt(detailedForecast, "precipitation is ", "%")
+    return precipitation
+
+def getGustSpeed(detailedForecast):
+    print("getPrecipitation")
+
+    gustSpeed = getInt(detailedForecast, "gusts as high as", "mph")
+
+    return gustSpeed
+
+# This does some extra data siphoning over the forecast data
+# this will allow apps to make direct calls to get more precise info with out having
+# to resort to string interpretation.
+def processForecastData(forecastData):
+    # print("processForecastData")
+
+    periods = forecastData["properties"]["periods"]
+    for period in periods:
+        period["speedUnit"]     = "mph"
+        period["precipitation"] = getPrecipitation(period["detailedForecast"])
+        period["gustSpeed"]     = getGustSpeed(period["detailedForecast"])
+
 # Search through data
 
 def getLocal(infoData):
@@ -105,6 +142,15 @@ async def receiver(websocket, path):
 # except:
 #    print ("Error: unable to start thread")
 
-start_server = websockets.serve(receiver, "localhost", 5000)
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+# start_server = websockets.serve(receiver, "localhost", 5000)
+# asyncio.get_event_loop().run_until_complete(start_server)
+# asyncio.get_event_loop().run_forever()
+
+# Test Server
+
+infoData = getInfoData()
+# print("infoData:" + str(infoData))
+forecastData = getForecastData(infoData)
+# print("forecastData:" + str(forecastData))
+
+processForecastData(forecastData)
